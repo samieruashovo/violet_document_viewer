@@ -3,8 +3,9 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  open_document
   permission_handler_windows
-  syncfusion_pdfviewer_windows
+  share_plus
   url_launcher_windows
 )
 

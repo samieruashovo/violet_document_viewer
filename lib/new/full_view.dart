@@ -2,8 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_treeview/flutter_treeview.dart';
 import 'package:pdfrx/pdfrx.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
+import 'excel_viewer.dart';
 import 'word_viewer.dart';
 
 class DocumentReaderApp extends StatefulWidget {
@@ -46,6 +46,8 @@ class _DocumentReaderAppState extends State<DocumentReaderApp> {
   String? _getHomeDirectory() {
     if (Platform.isLinux || Platform.isMacOS) {
       return Platform.environment['HOME']; // Fetch the home directory path
+    } else if (Platform.isWindows) {
+      return Platform.environment['USERPROFILE'];
     }
     return null;
   }
@@ -70,11 +72,13 @@ class _DocumentReaderAppState extends State<DocumentReaderApp> {
             print("Permission denied: ${entity.path}");
           }
         } else if (entity is File &&
-            (entity.path.endsWith('.pdf') ||
-                entity.path.endsWith('.xlsx') ||
-                entity.path.endsWith('.xls') ||
-                entity.path.endsWith('.doc') ||
-                entity.path.endsWith('.docx'))) {
+            (entity.path.endsWith('.pdf') || entity.path.endsWith('.xlsx')
+            // ||
+            // // entity.path.endsWith('.xls') ||
+            // entity.path.endsWith('.doc') ||
+            // entity.path.endsWith('.docx')
+
+            )) {
           nodeList.add(Node(
             label: entity.path.split('/').last, // File name
             key: entity.path,
@@ -168,15 +172,15 @@ class _DocumentReaderAppState extends State<DocumentReaderApp> {
             child: selectedFile == null
                 ? const Center(child: Text('No file selected'))
                 : selectedFile!.endsWith('.pdf')
-                    ? PdfViewer.asset(File(selectedFile!).path)
-                    : selectedFile!.endsWith('.docx') ||
-                            selectedFile!.endsWith('.doc')
-                        ? WordViewerPage(filePath: File(selectedFile!).path)
-                        : selectedFile!.endsWith('xlsx') ||
-                                selectedFile!.endsWith('xls')
-                            ? WordViewerPage(filePath: File(selectedFile!).path)
-                            : const Center(
-                                child: Text('Unsupported file format')),
+                    ? PdfViewer.asset(selectedFile!)
+                    // : selectedFile!.endsWith('.docx') ||
+                    //         selectedFile!.endsWith('.doc')
+                    //     ? WOrdViewer(filePath: File(selectedFile!).path)
+                    : selectedFile!.endsWith('xlsx')
+                        //  ||
+                        //         selectedFile!.endsWith('xls')
+                        ? ExcelViewer(File(selectedFile!).path)
+                        : const Center(child: Text('Unsupported file format')),
           ),
         ],
       ),
