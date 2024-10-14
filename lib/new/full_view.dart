@@ -72,6 +72,8 @@ class _DocumentReaderAppState extends State<DocumentReaderApp> {
         } else if (entity is File &&
             (entity.path.endsWith('.pdf') ||
                 entity.path.endsWith('.xlsx') ||
+                entity.path.endsWith('.xls') ||
+                entity.path.endsWith('.doc') ||
                 entity.path.endsWith('.docx'))) {
           nodeList.add(Node(
             label: entity.path.split('/').last, // File name
@@ -99,7 +101,7 @@ class _DocumentReaderAppState extends State<DocumentReaderApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Document Reader'),
+        title: const Center(child: Text('Violet Document Reader')),
       ),
       body: Row(
         children: [
@@ -167,9 +169,11 @@ class _DocumentReaderAppState extends State<DocumentReaderApp> {
                 ? const Center(child: Text('No file selected'))
                 : selectedFile!.endsWith('.pdf')
                     ? PdfViewer.asset(File(selectedFile!).path)
-                    : selectedFile!.endsWith('.docx')
+                    : selectedFile!.endsWith('.docx') ||
+                            selectedFile!.endsWith('.doc')
                         ? WordViewerPage(filePath: File(selectedFile!).path)
-                        : selectedFile!.endsWith('xlsx')
+                        : selectedFile!.endsWith('xlsx') ||
+                                selectedFile!.endsWith('xls')
                             ? WordViewerPage(filePath: File(selectedFile!).path)
                             : const Center(
                                 child: Text('Unsupported file format')),
